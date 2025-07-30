@@ -1,0 +1,5 @@
+numpy<2
+fastai
+fastcore
+fastdownload
+ddgs
