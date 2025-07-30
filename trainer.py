@@ -24,8 +24,23 @@ class BirdClassifierTrainer:
         self.learn.fine_tune(epochs)
         print("Training complete.")
 
+    def save_model(self, model_path):
+        # Accept a full path, not just a string
+        model_path = Path(model_path)
+        model_path.parent.mkdir(parents=True, exist_ok=True)
+        self.learn.export(model_path)
+        print(f"Model saved to {model_path}")
+
+    def load_model(self, model_path):
+        # Accept a path to exported .pkl file and load
+        model_path = Path(model_path)
+        self.learn = load_learner(model_path)
+        print(f"Model loaded from {model_path}")
+
     def predict(self, img_path):
+        if self.learn is None:
+            raise RuntimeError("No trained model loaded. Train or load a model before calling predict.")
         print(f"Predicting on {img_path}...")
-        is_bird,_,probs = self.learn.predict(PILImage.create(img_path))
+        is_bird, _, probs = self.learn.predict(PILImage.create(img_path))
         print(f"Prediction: {is_bird}, Probability: {probs[0]:.4f}")
         return is_bird, probs
