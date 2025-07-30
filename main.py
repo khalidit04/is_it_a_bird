@@ -4,13 +4,13 @@ from pathlib import Path
 
 from fastai.vision.all import load_learner
 
+from config import DOWNLOAD_ROOT
 from utils import check_internet, delete_folder
 from downloader import ImageDatasetDownloader
 from trainer import BirdClassifierTrainer
 
 # --------- CONSTANTS & CONFIG ---------
-SINGLE_IMAGE_DIR = Path("single_image")
-MODEL_DIR = Path("bird_or_not")
+MODEL_DIR = Path(DOWNLOAD_ROOT)
 MODEL_FILE = MODEL_DIR / "bird_model.pkl"
 TEMP_IMAGE = Path("temp_input.jpg")
 
