@@ -27,9 +27,15 @@ def parse_args():
 # --------- INFERENCE ---------
 def predict_image(model_file, img_path):
     learn = load_learner(model_file)
-    pred = learn.predict(img_path)
-    logging.info(f"Prediction for '{img_path}': {pred}")
-    return pred
+    # pred = learn.predict(img_path)
+    pred_class, pred_idx, pred_probs = learn.predict(img_path)
+    print(f"Predicted class: {pred_class}, Index: {pred_idx}, Probabilities: {pred_probs}")
+    if pred_probs[pred_idx] < 0.5:
+        result = None  # or 'unknown'
+    else:
+        result = pred_class
+    logging.info(f"Prediction for '{img_path}': {result}")
+    return result
 
 # --------- TRAINING WORKFLOW ---------
 def train_and_export_model(downloader, trainer, epochs):
