@@ -1,6 +1,7 @@
 from ddgs import DDGS
 from fastcore.all import L
 from fastdownload import download_url
+import requests
 from fastai.vision.all import *
 from config import CLASSES, DOWNLOAD_ROOT, MAX_IMAGES_PER_CLASS, RESIZE_TO
 import time
@@ -20,6 +21,19 @@ class ImageDatasetDownloader:
         results = L(DDGS().images(keywords, max_results=max_images)).itemgot('image')
         logger.info(f"Found {len(results)} images for '{keywords}'")
         return results
+
+    def download_image_from_url(self, img_url, dest_path):
+        logging.info(f"Downloading image from: {img_url}")
+        try:
+            response = requests.get(img_url, timeout=10)
+            response.raise_for_status()
+            with open(dest_path, 'wb') as f:
+                f.write(response.content)
+            logging.info(f"Downloaded image to: {dest_path}")
+            return dest_path
+        except Exception as e:
+            logging.error(f"Failed to download image from url '{img_url}': {e}")
+            raise
 
     def download_single_image(self, query, dest, retries=3):
         dest_path = Path(dest)
